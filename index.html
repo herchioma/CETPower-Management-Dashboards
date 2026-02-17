@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CETPower – Looker Studio Dashboard Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B6B;
+    --coral-light: #FFE5E5;
+    --coral-mid: #FF9B9B;
+    --dark: #2C2C2C;
+    --gray: #4A4A4A;
+    --gray-mid: #8A8A8A;
+    --gray-light: #F5F5F5;
+    --white: #FFFFFF;
+    --green: #27AE60;
+    --yellow: #F2994A;
+    --red: #EB5757;
+    --border: #E8E8E8;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-hover: 0 8px 32px rgba(255,107,107,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F0F0F0;
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── APP SHELL ── */
+  .app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ── LOOKER STUDIO TOP BAR ── */
+  .ls-topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .ls-topbar-left { display: flex; align-items: center; gap: 16px; }
+  .ls-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--dark); }
+  .ls-logo-icon { width: 28px; height: 28px; background: var(--coral); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .ls-logo-icon svg { width: 16px; height: 16px; fill: white; }
+  .ls-report-name { font-size: 14px; color: var(--gray-mid); }
+  .ls-topbar-right { display: flex; align-items: center; gap: 12px; }
+  .ls-btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; }
+  .ls-btn-outline { border: 1px solid var(--border); background: white; color: var(--gray); }
+  .ls-btn-primary { background: var(--coral); color: white; }
+  .ls-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--coral-light); color: var(--coral); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* ── PAGE TABS ── */
+  .page-tabs {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+  }
+  .page-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-mid);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .page-tab:hover { color: var(--coral); }
+  .page-tab.active { color: var(--coral); border-bottom-color: var(--coral); }
+
+  /* ── DASHBOARD PAGES ── */
+  .dashboard-page { display: none; padding: 24px; }
+  .dashboard-page.active { display: block; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-label { font-size: 12px; font-weight: 600; color: var(--gray-mid); text-transform: uppercase; letter-spacing: 0.5px; }
+  .filter-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--gray-light); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--gray); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip.active { background: var(--coral-light); border-color: var(--coral); color: var(--coral); font-weight: 600; }
+  .filter-divider { width: 1px; height: 24px; background: var(--border); }
+  .filter-select {
+    border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; color: var(--gray); font-family: 'DM Sans', sans-serif;
+    background: white; cursor: pointer; outline: none;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-3-1 { display: grid; grid-template-columns: 3fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 20px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+
+  /* ── CARD BASE ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-hover); }
+  .card-title {
+    font-size: 11px; font-weight: 600; color: var(--gray-mid);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-title-icon { font-size: 14px; }
+
+  /* ── KPI SCORECARDS ── */
+  .kpi-card { position: relative; overflow: hidden; }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--coral);
+  }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-value {
+    font-size: 28px; font-weight: 700; color: var(--dark);
+    font-family: 'DM Mono', monospace; letter-spacing: -1px;
+    line-height: 1;
+  }
+  .kpi-value.coral { color: var(--coral); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-label { font-size: 12px; color: var(--gray-mid); margin-top: 6px; }
+  .kpi-change {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600; padding: 2px 7px;
+    border-radius: 10px; margin-top: 8px;
+  }
+  .kpi-change.up { background: #E8F5E9; color: var(--green); }
+  .kpi-change.down { background: #FFEBEE; color: var(--red); }
+  .kpi-sparkline { margin-top: 12px; }
+
+  /* ── CHART CONTAINERS ── */
+  .chart-card { }
+  .chart-area { width: 100%; position: relative; }
+
+  /* ── SVG CHARTS ── */
+  svg { display: block; }
+  .axis-line { stroke: var(--border); stroke-width: 1; }
+  .grid-line { stroke: var(--border); stroke-width: 0.5; stroke-dasharray: 3,3; }
+  .axis-label { font-family: 'DM Sans', sans-serif; font-size: 10px; fill: var(--gray-mid); }
+  .chart-label { font-family: 'DM Sans', sans-serif; font-size: 10px; fill: var(--gray); }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th {
+    background: var(--gray-light); color: var(--gray-mid);
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--dark); vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--gray-light); }
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
+  }
+  .badge-green { background: #E8F5E9; color: var(--green); }
+  .badge-yellow { background: #FFF3E0; color: var(--yellow); }
+  .badge-red { background: #FFEBEE; color: var(--red); }
+  .badge-coral { background: var(--coral-light); color: var(--coral); }
+
+  /* ── GAUGE ── */
+  .gauge-mini { text-align: center; }
+  .gauge-site-name { font-size: 10px; font-weight: 600; color: var(--gray); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gauge-value { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .section-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--dark); }
+  .section-sub { font-size: 12px; color: var(--gray-mid); margin-bottom: 20px; margin-top: 2px; }
+
+  /* ── BAR CHART ── */
+  .bar-group { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-name { font-size: 11px; color: var(--gray); width: 110px; flex-shrink: 0; text-align: right; }
+  .bar-track { flex: 1; height: 20px; background: var(--gray-light); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 10px; font-weight: 600; color: white; transition: width 0.8s ease; }
+  .bar-fill.coral { background: var(--coral); }
+  .bar-fill.gray { background: var(--gray); }
+  .bar-fill.green { background: var(--green); }
+  .bar-fill.yellow { background: var(--yellow); }
+  .bar-val { font-size: 11px; font-weight: 600; color: var(--gray); width: 60px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+
+  /* ── DONUT ── */
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { color: var(--gray); flex: 1; }
+  .legend-val { font-weight: 600; color: var(--dark); font-family: 'DM Mono', monospace; font-size: 11px; }
+
+  /* ── MINI TREND ── */
+  .mini-trend { display: flex; align-items: flex-end; gap: 3px; height: 32px; }
+  .trend-bar { flex: 1; border-radius: 2px 2px 0 0; transition: height 0.5s ease; }
+
+  /* ── HEATMAP ── */
+  .heatmap-grid { display: grid; gap: 4px; }
+  .heatmap-cell {
+    border-radius: 4px; padding: 6px 4px; font-size: 9px;
+    font-weight: 600; text-align: center; color: white;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── ALERT RIBBON ── */
+  .alert-ribbon {
+    background: #FFEBEE; border: 1px solid #FFCDD2;
+    border-radius: 8px; padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--red); margin-bottom: 16px;
+  }
+  .alert-ribbon.yellow { background: #FFF3E0; border-color: #FFE0B2; color: var(--yellow); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-track { height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 3px; }
+
+  /* ── SCROLLABLE TABLE ── */
+  .table-scroll { overflow-x: auto; }
+
+  /* ── EMPTY STATE for notes ── */
+  .viz-note {
+    font-size: 10px; color: var(--gray-mid); font-style: italic;
+    margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- LOOKER STUDIO TOP BAR -->
+  <div class="ls-topbar">
+    <div class="ls-topbar-left">
+      <div class="ls-logo">
+        <div class="ls-logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 5a4 4 0 100-8 4 4 0 000 8z"/></svg>
+        </div>
+        Looker Studio
+      </div>
+      <span style="color:var(--border)">|</span>
+      <span class="ls-report-name">CETPower Management Dashboards</span>
+    </div>
+    <div class="ls-topbar-right">
+      <button class="ls-btn ls-btn-outline">✏️ Edit</button>
+      <button class="ls-btn ls-btn-primary">Share</button>
+      <div class="ls-avatar">CK</div>
+    </div>
+  </div>
+
+  <!-- PAGE TABS -->
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="switchPage(0)">💰 Finance</div>
+    <div class="page-tab" onclick="switchPage(1)">⚡ Production</div>
+    <div class="page-tab" onclick="switchPage(2)">📦 Inventory</div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PAGE 1: FINANCE DASHBOARD
+  ════════════════════════════════════════ -->
+  <div class="dashboard-page active" id="page-0">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Period</span>
+      <div class="filter-chip active">This Month</div>
+      <div class="filter-chip">Last Month</div>
+      <div class="filter-chip">Last 3 Months</div>
+      <div class="filter-chip">Last 12 Months</div>
+      <div class="filter-divider"></div>
+      <span class="filter-label">Type</span>
+      <div class="filter-chip active">All</div>
+      <div class="filter-chip">Revenue</div>
+      <div class="filter-chip">Expense</div>
+      <div class="filter-divider"></div>
+      <select class="filter-select">
+        <option>All Categories</option>
+        <option>Energy Sales</option>
+        <option>Fuel</option>
+        <option>Salaries</option>
+      </select>
+      <select class="filter-select">
+        <option>All Banks</option>
+        <option>GTB Main</option>
+        <option>Access Bank</option>
+        <option>Zenith Bank</option>
+        <option>UBA Payroll</option>
+      </select>
+    </div>
+
+    <!-- Section Header -->
+    <div class="section-header"><div class="section-dot"></div><div class="section-title">Finance Overview</div></div>
+    <div class="section-sub">Real-time financial health across all accounts · Last updated 9 minutes ago</div>
+
+    <!-- KPI ROW -->
+    <div class="grid-4">
+      <div class="card kpi-card">
+        <div class="card-title">Total Cash Position <span class="card-title-icon">🏦</span></div>
+        <div class="kpi-value coral">₦181.4M</div>
+        <div class="kpi-label">Across 4 bank accounts</div>
+        <span class="kpi-change up">↑ 8.3% vs last month</span>
+        <div class="kpi-sparkline">
+          <div class="mini-trend">
+            <div class="trend-bar" style="height:50%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:60%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:55%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:70%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:65%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:80%;background:var(--coral-light)"></div>
+            <div class="trend-bar" style="height:90%;background:var(--coral)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card kpi-card green">
+        <div class="card-title">MTD Revenue <span class="card-title-icon">📈</span></div>
+        <div class="kpi-value green">₦74.2M</div>
+        <div class="kpi-label">Month to date</div>
+        <span class="kpi-change up">↑ 12.1% vs Feb '25</span>
+        <div class="kpi-sparkline">
+          <div class="mini-trend">
+            <div class="trend-bar" style="height:45%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:58%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:62%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:70%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:75%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:85%;background:#C8E6C9"></div>
+            <div class="trend-bar" style="height:95%;background:var(--green)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card kpi-card yellow">
+        <div class="card-title">MTD Expenses <span class="card-title-icon">💸</span></div>
+        <div class="kpi-value" style="color:var(--yellow)">₦52.8M</div>
+        <div class="kpi-label">Month to date</div>
+        <span class="kpi-change down">↑ 5.4% vs Feb '25</span>
+        <div class="kpi-sparkline">
+          <div class="mini-trend">
+            <div class="trend-bar" style="height:60%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:55%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:65%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:58%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:70%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:72%;background:#FFE0B2"></div>
+            <div class="trend-bar" style="height:80%;background:var(--yellow)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card kpi-card">
+        <div class="card-title">Net Cash Flow <span class="card-title-icon">💹</span></div>
+        <div class="kpi-value coral">+₦21.4M</div>
+        <div class="kpi-label">Revenue minus expenses</div>
+        <span class="kpi-change up">↑ 28.9% vs last month</span>
+        <div class="progress-track" style="margin-top:12px">
+          <div class="progress-fill" style="width:71%;background:var(--coral)"></div>
+        </div>
+        <div style="font-size:10px;color:var(--gray-mid);margin-top:4px">71% profit margin</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="grid-2">
+      <!-- Revenue vs Expenses Line Chart -->
+      <div class="card chart-card">
+        <div class="card-title">Revenue vs Expenses — Last 12 Months <span class="card-title-icon">📊</span></div>
+        <svg viewBox="0 0 480 200" class="chart-area">
+          <!-- Grid -->
+          <line x1="50" y1="10" x2="50" y2="170" class="axis-line"/>
+          <line x1="50" y1="170" x2="470" y2="170" class="axis-line"/>
+          <line x1="50" y1="40" x2="470" y2="40" class="grid-line"/>
+          <line x1="50" y1="80" x2="470" y2="80" class="grid-line"/>
+          <line x1="50" y1="120" x2="470" y2="120" class="grid-line"/>
+          <!-- Y labels -->
+          <text x="40" y="43" class="axis-label" text-anchor="end">100M</text>
+          <text x="40" y="83" class="axis-label" text-anchor="end">75M</text>
+          <text x="40" y="123" class="axis-label" text-anchor="end">50M</text>
+          <text x="40" y="173" class="axis-label" text-anchor="end">0</text>
+          <!-- X labels -->
+          <text x="84"  y="186" class="axis-label" text-anchor="middle">Mar</text>
+          <text x="117" y="186" class="axis-label" text-anchor="middle">Apr</text>
+          <text x="150" y="186" class="axis-label" text-anchor="middle">May</text>
+          <text x="183" y="186" class="axis-label" text-anchor="middle">Jun</text>
+          <text x="216" y="186" class="axis-label" text-anchor="middle">Jul</text>
+          <text x="249" y="186" class="axis-label" text-anchor="middle">Aug</text>
+          <text x="282" y="186" class="axis-label" text-anchor="middle">Sep</text>
+          <text x="315" y="186" class="axis-label" text-anchor="middle">Oct</text>
+          <text x="348" y="186" class="axis-label" text-anchor="middle">Nov</text>
+          <text x="381" y="186" class="axis-label" text-anchor="middle">Dec</text>
+          <text x="414" y="186" class="axis-label" text-anchor="middle">Jan</text>
+          <text x="447" y="186" class="axis-label" text-anchor="middle">Feb</text>
+          <!-- Revenue area -->
+          <defs>
+            <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="expGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4A4A4A" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#4A4A4A" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Revenue fill -->
+          <path d="M84,95 L117,88 L150,80 L183,85 L216,75 L249,70 L282,65 L315,60 L348,55 L381,50 L414,48 L447,45 L447,170 L84,170Z" fill="url(#revGrad)"/>
+          <!-- Expense fill -->
+          <path d="M84,125 L117,118 L150,115 L183,120 L216,112 L249,108 L282,105 L315,102 L348,100 L381,95 L414,92 L447,88 L447,170 L84,170Z" fill="url(#expGrad)"/>
+          <!-- Revenue line -->
+          <polyline points="84,95 117,88 150,80 183,85 216,75 249,70 282,65 315,60 348,55 381,50 414,48 447,45" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Expense line -->
+          <polyline points="84,125 117,118 150,115 183,120 216,112 249,108 282,105 315,102 348,100 381,95 414,92 447,88" fill="none" stroke="#4A4A4A" stroke-width="2" stroke-linejoin="round"/>
+          <!-- Dots on last points -->
+          <circle cx="447" cy="45" r="4" fill="#FF6B6B"/>
+          <circle cx="447" cy="88" r="4" fill="#4A4A4A"/>
+          <!-- Legend -->
+          <circle cx="64" cy="200" r="4" fill="#FF6B6B"/><text x="72" y="203" class="chart-label">Revenue</text>
+          <circle cx="140" cy="200" r="4" fill="#4A4A4A"/><text x="148" y="203" class="chart-label">Expenses</text>
+        </svg>
+        <div class="viz-note">Visual type: Time Series Line Chart · X: Date (Month) · Y: SUM(Amount) · Breakdown: Type</div>
+      </div>
+
+      <!-- Expense Breakdown Pie -->
+      <div class="card chart-card">
+        <div class="card-title">Expense Breakdown — This Month <span class="card-title-icon">🥧</span></div>
+        <div style="display:flex;align-items:center;gap:20px">
+          <svg viewBox="0 0 160 160" width="160" height="160" style="flex-shrink:0">
+            <defs><clipPath id="cp"><circle cx="80" cy="80" r="80"/></clipPath></defs>
+            <!-- Pie slices using conic-gradient equivalent -->
+            <circle cx="80" cy="80" r="80" fill="#FF6B6B"/>
+            <circle cx="80" cy="80" r="80" fill="#F2994A" stroke-dasharray="113 389" stroke-dashoffset="-69" stroke-width="160" fill="none" clip-path="url(#cp)" style="transform:rotate(-90deg);transform-origin:80px 80px"/>
+            <circle cx="80" cy="80" r="80" fill="#4A4A4A" stroke-dasharray="88 389" stroke-dashoffset="-182" stroke-width="160" fill="none" clip-path="url(#cp)" style="transform:rotate(-90deg);transform-origin:80px 80px"/>
+            <circle cx="80" cy="80" r="80" fill="#27AE60" stroke-dasharray="60 389" stroke-dashoffset="-270" stroke-width="160" fill="none" clip-path="url(#cp)" style="transform:rotate(-90deg);transform-origin:80px 80px"/>
+            <circle cx="80" cy="80" r="80" fill="#8A8A8A" stroke-dasharray="40 389" stroke-dashoffset="-330" stroke-width="160" fill="none" clip-path="url(#cp)" style="transform:rotate(-90deg);transform-origin:80px 80px"/>
+            <!-- Center hole -->
+            <circle cx="80" cy="80" r="48" fill="white"/>
+            <text x="80" y="76" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#2C2C2C">₦52.8M</text>
+            <text x="80" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#8A8A8A">Total Expenses</text>
+          </svg>
+          <div class="donut-legend" style="flex:1">
+            <div class="legend-row"><div class="legend-dot" style="background:#FF6B6B"></div><span class="legend-label">Fuel</span><span class="legend-val">29%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#F2994A"></div><span class="legend-label">Salaries</span><span class="legend-val">23%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#4A4A4A"></div><span class="legend-label">Maintenance</span><span class="legend-val">22%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#27AE60"></div><span class="legend-label">Equipment</span><span class="legend-val">15%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#8A8A8A"></div><span class="legend-label">Other</span><span class="legend-val">11%</span></div>
+          </div>
+        </div>
+        <div class="viz-note">Visual type: Donut/Pie Chart · Dimension: Category · Metric: SUM(Amount) · Filter: Type = Expense</div>
+      </div>
+    </div>
+
+    <!-- BANK + TABLE ROW -->
+    <div class="grid-1-2">
+      <!-- Bank Balances Bar -->
+      <div class="card">
+        <div class="card-title">Bank Balances <span class="card-title-icon">🏧</span></div>
+        <div class="bar-group">
+          <div class="bar-row">
+            <div class="bar-name">Zenith Reserve</div>
+            <div class="bar-track"><div class="bar-fill coral" style="width:90%">₦92.2M</div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name">GTB Main</div>
+            <div class="bar-track"><div class="bar-fill gray" style="width:50%">₦45.7M</div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name">Access Ops</div>
+            <div class="bar-track"><div class="bar-fill" style="width:31%;background:#8A8A8A">₦28.3M</div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name">UBA Payroll</div>
+            <div class="bar-track"><div class="bar-fill" style="width:17%;background:#C8C8C8">₦15.2M</div></div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:11px;color:var(--gray-mid)">Total Cash</div>
+          <div style="font-size:18px;font-weight:700;color:var(--coral);font-family:'DM Mono',monospace">₦181.4M</div>
+        </div>
+        <div class="viz-note">Visual type: Bar Chart · Dimension: Bank_Account · Metric: SUM(Current_Balance) · Source: Bank_Balances</div>
+      </div>
+
+      <!-- Recent Transactions Table -->
+      <div class="card">
+        <div class="card-title">Recent Transactions <span class="card-title-icon">📋</span></div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Account</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>15 Feb</td><td><span class="badge badge-green">Revenue</span></td><td>Energy Sales</td><td style="font-family:'DM Mono',monospace;color:var(--green)">+₦4.5M</td><td>GTB Main</td></tr>
+              <tr><td>15 Feb</td><td><span class="badge badge-red">Expense</span></td><td>Fuel</td><td style="font-family:'DM Mono',monospace;color:var(--red)">-₦2.3M</td><td>GTB Main</td></tr>
+              <tr><td>14 Feb</td><td><span class="badge badge-green">Revenue</span></td><td>Energy Sales</td><td style="font-family:'DM Mono',monospace;color:var(--green)">+₦6.1M</td><td>Zenith Bank</td></tr>
+              <tr><td>14 Feb</td><td><span class="badge badge-red">Expense</span></td><td>Maintenance</td><td style="font-family:'DM Mono',monospace;color:var(--red)">-₦1.8M</td><td>Access Bank</td></tr>
+              <tr><td>13 Feb</td><td><span class="badge badge-green">Revenue</span></td><td>Consulting</td><td style="font-family:'DM Mono',monospace;color:var(--green)">+₦1.2M</td><td>GTB Main</td></tr>
+              <tr><td>13 Feb</td><td><span class="badge badge-red">Expense</span></td><td>Salaries</td><td style="font-family:'DM Mono',monospace;color:var(--red)">-₦9.4M</td><td>UBA Payroll</td></tr>
+              <tr><td>12 Feb</td><td><span class="badge badge-green">Revenue</span></td><td>Energy Sales</td><td style="font-family:'DM Mono',monospace;color:var(--green)">+₦5.7M</td><td>Zenith Bank</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="viz-note">Visual type: Table · Columns: Date, Type, Category, Amount, Bank_Account · Sort: Date DESC · Source: Finance_Transactions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PAGE 2: PRODUCTION DASHBOARD
+  ════════════════════════════════════════ -->
+  <div class="dashboard-page" id="page-1">
+
+    <div class="filter-bar">
+      <span class="filter-label">Period</span>
+      <div class="filter-chip active">This Month</div>
+      <div class="filter-chip">Last 3 Months</div>
+      <div class="filter-chip">Last 12 Months</div>
+      <div class="filter-divider"></div>
+      <select class="filter-select">
+        <option>All Sites</option>
+        <option>Lagos - Lekki</option>
+        <option>Lagos - Ikeja</option>
+        <option>Abuja - Central</option>
+        <option>Port Harcourt - GRA</option>
+        <option>Ibadan - Bodija</option>
+        <option>Kano - Industrial</option>
+      </select>
+      <select class="filter-select">
+        <option>All Weather</option>
+        <option>Clear</option>
+        <option>Cloudy</option>
+        <option>Rainy</option>
+      </select>
+    </div>
+
+    <div class="section-header"><div class="section-dot"></div><div class="section-title">Production Overview</div></div>
+    <div class="section-sub">kWh generation across 6 sites · Real-time performance monitoring</div>
+
+    <!-- KPI ROW -->
+    <div class="grid-5">
+      <div class="card kpi-card">
+        <div class="card-title">Total kWh (MTD)</div>
+        <div class="kpi-value coral">2.47M</div>
+        <div class="kpi-label">kWh generated</div>
+        <span class="kpi-change up">↑ 6.2% vs target</span>
+      </div>
+      <div class="card kpi-card green">
+        <div class="card-title">YTD Production</div>
+        <div class="kpi-value green">4.92M</div>
+        <div class="kpi-label">kWh year-to-date</div>
+        <span class="kpi-change up">↑ On track</span>
+      </div>
+      <div class="card kpi-card">
+        <div class="card-title">Fleet Utilization</div>
+        <div class="kpi-value coral">83.2%</div>
+        <div class="kpi-label">Avg across all sites</div>
+        <div class="progress-track"><div class="progress-fill" style="width:83.2%;background:var(--coral)"></div></div>
+      </div>
+      <div class="card kpi-card green">
+        <div class="card-title">Best Site</div>
+        <div class="kpi-value green" style="font-size:16px;line-height:1.3">Abuja Central</div>
+        <div class="kpi-label">92% utilization</div>
+        <span class="kpi-change up">↑ Top performer</span>
+      </div>
+      <div class="card kpi-card red">
+        <div class="card-title">Below Target</div>
+        <div class="kpi-value red">1</div>
+        <div class="kpi-label">Site needs attention</div>
+        <span class="kpi-change down">⚠ Ibadan 75%</span>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="grid-2">
+      <!-- kWh by Site Stacked Column -->
+      <div class="card chart-card">
+        <div class="card-title">kWh Generated by Site — Last 6 Months <span class="card-title-icon">📊</span></div>
+        <svg viewBox="0 0 460 200" class="chart-area">
+          <line x1="50" y1="10" x2="50" y2="170" class="axis-line"/>
+          <line x1="50" y1="170" x2="450" y2="170" class="axis-line"/>
+          <line x1="50" y1="50" x2="450" y2="50" class="grid-line"/>
+          <line x1="50" y1="100" x2="450" y2="100" class="grid-line"/>
+          <line x1="50" y1="130" x2="450" y2="130" class="grid-line"/>
+          <text x="40" y="53" class="axis-label" text-anchor="end">2.5M</text>
+          <text x="40" y="103" class="axis-label" text-anchor="end">1.5M</text>
+          <text x="40" y="133" class="axis-label" text-anchor="end">1M</text>
+          <!-- Month labels -->
+          <text x="95"  y="185" class="axis-label" text-anchor="middle">Sep</text>
+          <text x="160" y="185" class="axis-label" text-anchor="middle">Oct</text>
+          <text x="225" y="185" class="axis-label" text-anchor="middle">Nov</text>
+          <text x="290" y="185" class="axis-label" text-anchor="middle">Dec</text>
+          <text x="355" y="185" class="axis-label" text-anchor="middle">Jan</text>
+          <text x="420" y="185" class="axis-label" text-anchor="middle">Feb</text>
+          <!-- Stacked bars - each bar width=48, gap=17 -->
+          <!-- Sep bars -->
+          <rect x="72" y="65" width="48" height="25" fill="#FF6B6B" rx="2"/>
+          <rect x="72" y="90" width="48" height="22" fill="#F2994A" rx="2"/>
+          <rect x="72" y="112" width="48" height="20" fill="#4A4A4A" rx="2"/>
+          <rect x="72" y="132" width="48" height="15" fill="#27AE60" rx="2"/>
+          <rect x="72" y="147" width="48" height="10" fill="#8A8A8A" rx="2"/>
+          <rect x="72" y="157" width="48" height="7" fill="#C8C8C8" rx="2"/>
+          <!-- Oct -->
+          <rect x="137" y="60" width="48" height="26" fill="#FF6B6B" rx="2"/>
+          <rect x="137" y="86" width="48" height="23" fill="#F2994A" rx="2"/>
+          <rect x="137" y="109" width="48" height="20" fill="#4A4A4A" rx="2"/>
+          <rect x="137" y="129" width="48" height="16" fill="#27AE60" rx="2"/>
+          <rect x="137" y="145" width="48" height="11" fill="#8A8A8A" rx="2"/>
+          <rect x="137" y="156" width="48" height="7" fill="#C8C8C8" rx="2"/>
+          <!-- Nov -->
+          <rect x="202" y="55" width="48" height="27" fill="#FF6B6B" rx="2"/>
+          <rect x="202" y="82" width="48" height="24" fill="#F2994A" rx="2"/>
+          <rect x="202" y="106" width="48" height="21" fill="#4A4A4A" rx="2"/>
+          <rect x="202" y="127" width="48" height="17" fill="#27AE60" rx="2"/>
+          <rect x="202" y="144" width="48" height="12" fill="#8A8A8A" rx="2"/>
+          <rect x="202" y="156" width="48" height="7" fill="#C8C8C8" rx="2"/>
+          <!-- Dec -->
+          <rect x="267" y="50" width="48" height="28" fill="#FF6B6B" rx="2"/>
+          <rect x="267" y="78" width="48" height="25" fill="#F2994A" rx="2"/>
+          <rect x="267" y="103" width="48" height="21" fill="#4A4A4A" rx="2"/>
+          <rect x="267" y="124" width="48" height="17" fill="#27AE60" rx="2"/>
+          <rect x="267" y="141" width="48" height="13" fill="#8A8A8A" rx="2"/>
+          <rect x="267" y="154" width="48" height="8" fill="#C8C8C8" rx="2"/>
+          <!-- Jan -->
+          <rect x="332" y="45" width="48" height="29" fill="#FF6B6B" rx="2"/>
+          <rect x="332" y="74" width="48" height="26" fill="#F2994A" rx="2"/>
+          <rect x="332" y="100" width="48" height="22" fill="#4A4A4A" rx="2"/>
+          <rect x="332" y="122" width="48" height="18" fill="#27AE60" rx="2"/>
+          <rect x="332" y="140" width="48" height="14" fill="#8A8A8A" rx="2"/>
+          <rect x="332" y="154" width="48" height="9" fill="#C8C8C8" rx="2"/>
+          <!-- Feb (MTD) -->
+          <rect x="397" y="42" width="48" height="30" fill="#FF6B6B" rx="2"/>
+          <rect x="397" y="72" width="48" height="27" fill="#F2994A" rx="2"/>
+          <rect x="397" y="99" width="48" height="23" fill="#4A4A4A" rx="2"/>
+          <rect x="397" y="122" width="48" height="19" fill="#27AE60" rx="2"/>
+          <rect x="397" y="141" width="48" height="14" fill="#8A8A8A" rx="2"/>
+          <rect x="397" y="155" width="48" height="9" fill="#C8C8C8" rx="2"/>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+          <div class="legend-row"><div class="legend-dot" style="background:#FF6B6B"></div><span style="font-size:10px;color:var(--gray)">Abuja Central</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#F2994A"></div><span style="font-size:10px;color:var(--gray)">Kano Industrial</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#4A4A4A"></div><span style="font-size:10px;color:var(--gray)">Lagos Lekki</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#27AE60"></div><span style="font-size:10px;color:var(--gray)">PH GRA</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#8A8A8A"></div><span style="font-size:10px;color:var(--gray)">Lagos Ikeja</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#C8C8C8"></div><span style="font-size:10px;color:var(--gray)">Ibadan</span></div>
+        </div>
+        <div class="viz-note">Visual type: Stacked Bar Chart · X: Date (Month) · Y: SUM(kWh_Generated) · Breakdown: Site_Name</div>
+      </div>
+
+      <!-- Site Performance Matrix -->
+      <div class="card">
+        <div class="card-title">Site Performance — This Month <span class="card-title-icon">🏆</span></div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Site</th>
+              <th>kWh (MTD)</th>
+              <th>Utilization</th>
+              <th>Downtime</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600">Abuja Central</td>
+              <td style="font-family:'DM Mono',monospace">589K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:92%;height:100%;background:var(--green);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--green);font-family:'DM Mono',monospace">92%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">0.8h</td>
+              <td><span class="badge badge-green">✓ Excellent</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Kano Industrial</td>
+              <td style="font-family:'DM Mono',monospace">490K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:83%;height:100%;background:var(--coral);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--coral);font-family:'DM Mono',monospace">83%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">1.2h</td>
+              <td><span class="badge badge-coral">✓ Good</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Lagos Lekki</td>
+              <td style="font-family:'DM Mono',monospace">448K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:88%;height:100%;background:var(--green);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--green);font-family:'DM Mono',monospace">88%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">1.0h</td>
+              <td><span class="badge badge-green">✓ Excellent</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">PH GRA</td>
+              <td style="font-family:'DM Mono',monospace">395K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:85%;height:100%;background:var(--green);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--green);font-family:'DM Mono',monospace">85%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">1.5h</td>
+              <td><span class="badge badge-green">✓ Good</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Lagos Ikeja</td>
+              <td style="font-family:'DM Mono',monospace">397K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:78%;height:100%;background:var(--yellow);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--yellow);font-family:'DM Mono',monospace">78%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">2.3h</td>
+              <td><span class="badge badge-yellow">⚠ Fair</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Ibadan Bodija</td>
+              <td style="font-family:'DM Mono',monospace">305K</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px"><div style="width:75%;height:100%;background:var(--red);border-radius:3px"></div></div>
+                  <span style="font-size:11px;font-weight:600;color:var(--red);font-family:'DM Mono',monospace">75%</span>
+                </div>
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px">3.1h</td>
+              <td><span class="badge badge-red">✗ Attention</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="viz-note">Visual type: Table with conditional formatting · Metrics: kWh_Generated, Utilization%, Downtime_Hours · Breakdown by Site</div>
+      </div>
+    </div>
+
+    <!-- GAUGE ROW -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title">Capacity Utilization by Site — Gauges <span class="card-title-icon">🎯</span></div>
+      <div class="grid-6" style="margin-bottom:0">
+        <!-- Site gauges -->
+        <div class="gauge-mini">
+          <div class="gauge-site-name">Abuja Central</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#27AE60" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="10"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#27AE60">92%</text>
+          </svg>
+        </div>
+        <div class="gauge-mini">
+          <div class="gauge-site-name">Lagos Lekki</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#27AE60" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="15"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#27AE60">88%</text>
+          </svg>
+        </div>
+        <div class="gauge-mini">
+          <div class="gauge-site-name">Kano Industrial</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#FF6B6B" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="21"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#FF6B6B">83%</text>
+          </svg>
+        </div>
+        <div class="gauge-mini">
+          <div class="gauge-site-name">PH GRA</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#27AE60" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="19"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#27AE60">85%</text>
+          </svg>
+        </div>
+        <div class="gauge-mini">
+          <div class="gauge-site-name">Lagos Ikeja</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#F2994A" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="28"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#F2994A">78%</text>
+          </svg>
+        </div>
+        <div class="gauge-mini">
+          <div class="gauge-site-name">Ibadan Bodija</div>
+          <svg viewBox="0 0 100 60" width="100%">
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E8E8E8" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#EB5757" stroke-width="10" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="32"/>
+            <text x="50" y="52" text-anchor="middle" font-family="DM Mono" font-size="14" font-weight="700" fill="#EB5757">75%</text>
+          </svg>
+        </div>
+      </div>
+      <div class="viz-note">Visual type: Gauge Charts (one per site) · Metric: AVG(kWh_Generated / Capacity_kWh) · Color: Green &gt;85%, Yellow 70-85%, Red &lt;70%</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PAGE 3: INVENTORY DASHBOARD
+  ════════════════════════════════════════ -->
+  <div class="dashboard-page" id="page-2">
+
+    <div class="filter-bar">
+      <span class="filter-label">Category</span>
+      <div class="filter-chip active">All Items</div>
+      <div class="filter-chip">Spare Parts</div>
+      <div class="filter-chip">Consumables</div>
+      <div class="filter-chip">Tools</div>
+      <div class="filter-divider"></div>
+      <select class="filter-select">
+        <option>All Stock Status</option>
+        <option>Well Stocked</option>
+        <option>Low Stock</option>
+        <option>Out of Stock</option>
+      </select>
+      <select class="filter-select">
+        <option>Last 30 Days</option>
+        <option>Last 7 Days</option>
+        <option>Last 90 Days</option>
+      </select>
+    </div>
+
+    <div class="section-header"><div class="section-dot"></div><div class="section-title">Inventory Management</div></div>
+    <div class="section-sub">Stock levels, movements and procurement alerts across all sites</div>
+
+    <!-- ALERT RIBBON -->
+    <div class="alert-ribbon">
+      ⚠️ <strong>3 items below reorder point</strong> — Fuel Filter, Coolant (25L), Cleaning Rags. Action required.
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="grid-5">
+      <div class="card kpi-card">
+        <div class="card-title">Total Inventory Value</div>
+        <div class="kpi-value coral">₦12.4M</div>
+        <div class="kpi-label">Across all categories</div>
+        <span class="kpi-change up">↑ ₦0.8M this month</span>
+      </div>
+      <div class="card kpi-card red">
+        <div class="card-title">Below Reorder Point</div>
+        <div class="kpi-value red">3</div>
+        <div class="kpi-label">Items need restocking</div>
+        <span class="kpi-change down">⚠ Urgent action</span>
+      </div>
+      <div class="card kpi-card green">
+        <div class="card-title">MTD Issues</div>
+        <div class="kpi-value green">124</div>
+        <div class="kpi-label">Items issued this month</div>
+        <span class="kpi-change up">↓ 8% vs last month</span>
+      </div>
+      <div class="card kpi-card">
+        <div class="card-title">Most Used Item</div>
+        <div class="kpi-value coral" style="font-size:14px;line-height:1.4">Engine Oil (20L)</div>
+        <div class="kpi-label">Highest issue frequency</div>
+        <span class="kpi-change up">38 units this month</span>
+      </div>
+      <div class="card kpi-card yellow">
+        <div class="card-title">Slow Moving (90d)</div>
+        <div class="kpi-value" style="color:var(--yellow)">2</div>
+        <div class="kpi-label">No movement 90+ days</div>
+        <span class="kpi-change down">Review recommended</span>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="grid-2">
+      <!-- Inventory by Category -->
+      <div class="card">
+        <div class="card-title">Inventory Value by Category <span class="card-title-icon">📦</span></div>
+        <div class="bar-group">
+          <div class="bar-row">
+            <div class="bar-name">Spare Parts</div>
+            <div class="bar-track"><div class="bar-fill coral" style="width:72%">₦8.9M</div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name">Consumables</div>
+            <div class="bar-track"><div class="bar-fill gray" style="width:20%">₦2.5M</div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name">Tools</div>
+            <div class="bar-track"><div class="bar-fill" style="width:8%;background:#27AE60">₦1.0M</div></div>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="card-title">Stock Status Distribution</div>
+          <div style="display:flex;gap:4px;height:24px;border-radius:6px;overflow:hidden;margin-top:8px">
+            <div style="width:65%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:600">65% Well Stocked</div>
+            <div style="width:19%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:600">19% Low</div>
+            <div style="width:16%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:600">16%</div>
+          </div>
+        </div>
+        <div class="viz-note">Visual type: Bar Chart + Stacked Bar · Dimension: Category · Metric: SUM(Current_Stock × Unit_Cost)</div>
+      </div>
+
+      <!-- Monthly Issues Trend -->
+      <div class="card chart-card">
+        <div class="card-title">Monthly Issues Trend — Last 3 Months <span class="card-title-icon">📉</span></div>
+        <svg viewBox="0 0 440 180" class="chart-area">
+          <line x1="40" y1="10" x2="40" y2="150" class="axis-line"/>
+          <line x1="40" y1="150" x2="430" y2="150" class="axis-line"/>
+          <line x1="40" y1="40" x2="430" y2="40" class="grid-line"/>
+          <line x1="40" y1="80" x2="430" y2="80" class="grid-line"/>
+          <line x1="40" y1="120" x2="430" y2="120" class="grid-line"/>
+          <text x="30" y="43" class="axis-label" text-anchor="end">150</text>
+          <text x="30" y="83" class="axis-label" text-anchor="end">100</text>
+          <text x="30" y="123" class="axis-label" text-anchor="end">50</text>
+          <text x="150" y="165" class="axis-label" text-anchor="middle">December</text>
+          <text x="240" y="165" class="axis-label" text-anchor="middle">January</text>
+          <text x="360" y="165" class="axis-label" text-anchor="middle">February</text>
+          <defs>
+            <linearGradient id="issueGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Area fill -->
+          <path d="M60,60 L90,65 L120,58 L150,70 L180,55 L210,62 L240,50 L270,58 L300,45 L330,52 L360,48 L390,55 L420,42 L420,150 L60,150Z" fill="url(#issueGrad)"/>
+          <!-- Line -->
+          <polyline points="60,60 90,65 120,58 150,70 180,55 210,62 240,50 270,58 300,45 330,52 360,48 390,55 420,42" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Month separator lines -->
+          <line x1="195" y1="10" x2="195" y2="150" stroke="#E8E8E8" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="315" y1="10" x2="315" y2="150" stroke="#E8E8E8" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- Last point dot -->
+          <circle cx="420" cy="42" r="4" fill="#FF6B6B"/>
+          <!-- Labels -->
+          <text x="60"  y="55" class="axis-label" text-anchor="middle">134</text>
+          <text x="240" y="45" class="axis-label" text-anchor="middle">135</text>
+          <text x="420" y="37" class="axis-label" text-anchor="middle">124</text>
+        </svg>
+        <div class="viz-note">Visual type: Area/Line Chart · X: Date (by Week) · Y: SUM(Quantity) · Filter: Type = Issue</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: TOP ITEMS + ALERTS TABLE -->
+    <div class="grid-2">
+      <!-- Top 10 Most Used -->
+      <div class="card">
+        <div class="card-title">Top Most Used Items — This Month <span class="card-title-icon">🔧</span></div>
+        <div class="bar-group">
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Engine Oil (20L)</div>
+            <div class="bar-track"><div class="bar-fill coral" style="width:90%"></div></div>
+            <div class="bar-val">38 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Safety Helmets</div>
+            <div class="bar-track"><div class="bar-fill coral" style="width:76%"></div></div>
+            <div class="bar-val">32 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Air Filter HD</div>
+            <div class="bar-track"><div class="bar-fill coral" style="width:66%"></div></div>
+            <div class="bar-val">28 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Industrial Gloves</div>
+            <div class="bar-track"><div class="bar-fill gray" style="width:57%"></div></div>
+            <div class="bar-val">24 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Fuel Filter</div>
+            <div class="bar-track"><div class="bar-fill gray" style="width:47%"></div></div>
+            <div class="bar-val">20 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Alternator Belt</div>
+            <div class="bar-track"><div class="bar-fill" style="width:38%;background:#8A8A8A"></div></div>
+            <div class="bar-val">16 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Spark Plugs</div>
+            <div class="bar-track"><div class="bar-fill" style="width:33%;background:#8A8A8A"></div></div>
+            <div class="bar-val">14 pcs</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-name" style="font-size:10px">Cable Ties</div>
+            <div class="bar-track"><div class="bar-fill" style="width:28%;background:#C8C8C8"></div></div>
+            <div class="bar-val">12 pcs</div>
+          </div>
+        </div>
+        <div class="viz-note">Visual type: Horizontal Bar Chart · Dimension: Item_Description · Metric: SUM(Quantity) · Filter: Type=Issue, This Month · Top 10</div>
+      </div>
+
+      <!-- Low Stock Alerts Table -->
+      <div class="card">
+        <div class="card-title" style="color:var(--red)">⚠ Low Stock Alerts — Action Required <span class="card-title-icon">🚨</span></div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Current</th>
+              <th>Min</th>
+              <th>Order Qty</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#FFF5F5">
+              <td style="font-weight:600;font-size:11px">Fuel Filter</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--red);font-weight:700">35</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--gray-mid)">60</td>
+              <td style="font-family:'DM Mono',monospace;font-weight:600">85</td>
+              <td><span class="badge badge-red">🔴 Critical</span></td>
+            </tr>
+            <tr style="background:#FFF5F5">
+              <td style="font-weight:600;font-size:11px">Coolant (25L)</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--red);font-weight:700">28</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--gray-mid)">40</td>
+              <td style="font-family:'DM Mono',monospace;font-weight:600">52</td>
+              <td><span class="badge badge-red">🔴 Critical</span></td>
+            </tr>
+            <tr style="background:#FFFBF0">
+              <td style="font-weight:600;font-size:11px">Cleaning Rags</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--yellow);font-weight:700">22</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--gray-mid)">30</td>
+              <td style="font-family:'DM Mono',monospace;font-weight:600">38</td>
+              <td><span class="badge badge-yellow">🟡 Low</span></td>
+            </tr>
+            <tr style="background:#FFFBF0">
+              <td style="font-weight:600;font-size:11px">Battery 12V</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--yellow);font-weight:700">15</td>
+              <td style="font-family:'DM Mono',monospace;color:var(--gray-mid)">20</td>
+              <td style="font-family:'DM Mono',monospace;font-weight:600">25</td>
+              <td><span class="badge badge-yellow">🟡 Low</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px">
+          <div class="card-title">Recent Movements</div>
+          <table class="data-table" style="margin-top:8px">
+            <thead><tr><th>Date</th><th>Item</th><th>Qty</th><th>Type</th><th>Site</th></tr></thead>
+            <tbody>
+              <tr><td style="font-size:11px">15 Feb</td><td style="font-size:11px">Engine Oil</td><td style="font-family:'DM Mono',monospace;font-size:11px">5</td><td><span class="badge badge-red" style="font-size:9px">Issue</span></td><td style="font-size:10px">Abuja</td></tr>
+              <tr><td style="font-size:11px">15 Feb</td><td style="font-size:11px">Air Filter</td><td style="font-family:'DM Mono',monospace;font-size:11px">3</td><td><span class="badge badge-red" style="font-size:9px">Issue</span></td><td style="font-size:10px">Lagos Lekki</td></tr>
+              <tr><td style="font-size:11px">14 Feb</td><td style="font-size:11px">Spark Plugs</td><td style="font-family:'DM Mono',monospace;font-size:11px">50</td><td><span class="badge badge-green" style="font-size:9px">Receipt</span></td><td style="font-size:10px">Warehouse</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="viz-note">Visual type: Tables with conditional formatting · Filter: Current_Stock &lt; Reorder_Point · Color: Red = critical, Yellow = low</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchPage(idx) {
+  document.querySelectorAll('.page-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.dashboard-page').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+}
+
+// Make filter chips interactive
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    // Only deactivate siblings in same group
+    const bar = this.closest('.filter-bar');
+    const chips = bar.querySelectorAll('.filter-chip');
+    // Simple toggle for demo
+    this.classList.toggle('active');
+  });
+});
+</script>
+</body>
+</html>
