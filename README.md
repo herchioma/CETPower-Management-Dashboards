@@ -2,6 +2,11 @@
 Finance, Production and Inventory Analytics Looker Studio Case Study
 
 ---
+#  Dashboard
+
+You can view the full dashboard mockup here:
+
+[CETPower Dashboard Mockup]file:///Users/chiomaasikaogu/Downloads/CETPower_Looker_Studio_Mockup.html
 
 ## Project Overview
 
